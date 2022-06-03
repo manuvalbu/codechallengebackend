@@ -1,1 +1,1 @@
-# codechallengebackend
+# Scaffolding for hexagonal SpringBoot API
