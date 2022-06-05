@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.port.input.ICreateTranstaction;
 import com.sopra.challenge.business.service.CreateTransactionService;
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 
@@ -14,9 +15,24 @@ class TransactionCreatedTest {
 
   @Test
   void positiveTransactionOkTest() {
-    Transaction transaction = new Transaction("12345A", "ES9820385778983000760236",
-        "2019-07-16T16:55:42.000Z", 193.38, 3.18, "Restaurant payment");
+    //Given
+    String reference = "12345A";
+    String iban = "ES9820385778983000760236";
+    Double amount = 100.0;
+    Double fee = 3.50;
+    String description = "Restaurant payment";
+    Transaction transaction = Transaction
+        .builder()
+        .reference(reference)
+        .iban(iban)
+        .dateTime(LocalDateTime.now())
+        .amount(amount)
+        .fee(fee)
+        .description(description)
+        .build();
+    //When
     Double credit = createTransactionService.createTransaction(transaction);
-    assertEquals(193.38, credit);
+    //Then
+    assertEquals(amount, credit);
   }
 }

@@ -8,6 +8,6 @@ public class CreateTransactionService implements ICreateTranstaction {
   @Override
   public Double createTransaction(Transaction transaction) {
 
-    return 193.38;
+    return transaction.getAmount();
   }
 }
