@@ -3,7 +3,7 @@ package com.sopra.challenge.business.exception;
 import lombok.Getter;
 
 @Getter
-public class CreditException extends Exception {
+public class CreditException extends RuntimeException {
 
   private final Double amount;
 

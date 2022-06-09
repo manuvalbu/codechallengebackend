@@ -26,7 +26,7 @@ class HU1Test {
 
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
-    personJsonObject.put("account_iban", "ES9820385778983000760236");
+    personJsonObject.put("iban", "ES9820385778983000760236");
     personJsonObject.put("date", "2019-07-16T16:55:42.000Z");
     personJsonObject.put("amount", 193.38);
     personJsonObject.put("fee", 3.18);

@@ -9,6 +9,7 @@ public class TransactionRepository implements ITransactionRepository {
 
   @Override
   public void save(Transaction transaction) {
-
+    //TODO: implement repository logic
+    throw new RuntimeException("Not Implemented");
   }
 }

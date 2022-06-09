@@ -2,12 +2,14 @@ package com.sopra.challenge.business.service;
 
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.exception.CreditException;
-import com.sopra.challenge.business.port.input.ICreateTranstaction;
+import com.sopra.challenge.business.port.input.ICreateTransaction;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
 import com.sopra.challenge.infrastructure.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class CreateTransactionService implements ICreateTranstaction {
+@Service
+public class CreateTransactionService implements ICreateTransaction {
 
   @Autowired
   private final AccountService accountService;
@@ -22,7 +24,7 @@ public class CreateTransactionService implements ICreateTranstaction {
   }
 
   @Override
-  public Double createTransaction(Transaction transaction) throws CreditException {
+  public Double createTransaction(Transaction transaction) {
 
     Double credit = accountService.retrieveCredit(transaction.getIban());
 

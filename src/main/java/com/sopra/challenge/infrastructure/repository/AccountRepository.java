@@ -9,11 +9,13 @@ import org.springframework.stereotype.Repository;
 public class AccountRepository implements IAccountRepository {
 
   public Optional<Account> find(String iban) {
-    return Optional.empty();
+    //TODO: implement repository logic
+    throw new RuntimeException("Not Implemented");
   }
 
   @Override
   public void save(Account account) {
-
+    //TODO: implement repository logic
+    throw new RuntimeException("Not Implemented");
   }
 }
