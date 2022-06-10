@@ -3,10 +3,12 @@ package com.sopra.challenge.business.domain;
 import com.sopra.challenge.business.exception.TransactionParameterException;
 import java.time.LocalDateTime;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Builder
 @Getter
+@EqualsAndHashCode
 public class Transaction {
 
   String reference;

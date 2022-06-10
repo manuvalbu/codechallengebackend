@@ -62,7 +62,7 @@ class ApiServiceTest {
         .andExpect(content().contentType(APPLICATION_JSON));
     //Then
     verify(accountRepositoryMock, times(1)).find(any(String.class));
-    verify(transactionRepositoryMock, times(1)).save(any(Transaction.class));
+    verify(transactionRepositoryMock, times(1)).create(any(Transaction.class));
   }
 
   @Test
@@ -91,7 +91,7 @@ class ApiServiceTest {
         .andExpect(content().string(Matchers.containsString("credit")));
     //Then
     verify(accountRepositoryMock, times(1)).find(any(String.class));
-    verify(transactionRepositoryMock, times(0)).save(any(Transaction.class));
+    verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 
 
@@ -118,7 +118,7 @@ class ApiServiceTest {
         .andExpect(content().string(Matchers.containsString("IBAN")));
     //Then
     verify(accountRepositoryMock, times(0)).find(any(String.class));
-    verify(transactionRepositoryMock, times(0)).save(any(Transaction.class));
+    verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 
   @Test
@@ -145,6 +145,6 @@ class ApiServiceTest {
         .andExpect(content().string(Matchers.containsString("amount")));
     //Then
     verify(accountRepositoryMock, times(0)).find(any(String.class));
-    verify(transactionRepositoryMock, times(0)).save(any(Transaction.class));
+    verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 }

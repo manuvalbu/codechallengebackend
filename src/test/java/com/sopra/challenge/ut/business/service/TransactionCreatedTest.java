@@ -51,7 +51,7 @@ class TransactionCreatedTest {
     //When
     Double credit = createTransactionService.createTransaction(transaction);
     //Then
-    verify(transactionRepositoryMock, times(1)).save(transaction);
+    verify(transactionRepositoryMock, times(1)).create(transaction);
     assertEquals(amount - fee, credit);
   }
 
@@ -75,7 +75,7 @@ class TransactionCreatedTest {
         .build();
     given(accountServiceMock.retrieveCredit(iban)).willReturn(creditDischarged - 1);
     //Then When
-    verify(transactionRepositoryMock, times(0)).save(transaction);
+    verify(transactionRepositoryMock, times(0)).create(transaction);
     assertThrows(CreditException.class,
         () -> createTransactionService.createTransaction(transaction));
   }
@@ -102,7 +102,7 @@ class TransactionCreatedTest {
     //When
     Double credit = createTransactionService.createTransaction(transaction);
     //Then
-    verify(transactionRepositoryMock, times(1)).save(transaction);
+    verify(transactionRepositoryMock, times(1)).create(transaction);
     assertTrue(credit >= 0);
   }
 }

@@ -5,6 +5,7 @@ import com.sopra.challenge.business.exception.CreditException;
 import com.sopra.challenge.business.port.input.ICreateTransaction;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
 import com.sopra.challenge.infrastructure.repository.TransactionRepository;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +38,13 @@ public class CreateTransactionService implements ICreateTransaction {
       throw new CreditException(amount, fee);
     }
 
-    transactionRepository.save(transaction);
+    transactionRepository.create(transaction);
 
     return newCredit;
+  }
+
+  @Override
+  public Optional<Transaction> searchTransaction(String reference) {
+    return transactionRepository.search(reference);
   }
 }
