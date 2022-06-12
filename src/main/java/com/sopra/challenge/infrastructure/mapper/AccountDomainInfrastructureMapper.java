@@ -1,9 +1,12 @@
 package com.sopra.challenge.infrastructure.mapper;
 
 import com.sopra.challenge.business.domain.Account;
-import com.sopra.challenge.infrastructure.repository.DTO.AccountEntity;
+import com.sopra.challenge.infrastructure.repository.dto.AccountEntity;
 
 public class AccountDomainInfrastructureMapper {
+
+  private AccountDomainInfrastructureMapper() {
+  }
 
   public static Account toDomainAccount(AccountEntity accountEntity) {
     return Account

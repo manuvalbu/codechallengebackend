@@ -2,24 +2,20 @@ package com.sopra.challenge.business.service;
 
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.exception.CreditException;
-import com.sopra.challenge.business.port.input.ICreateTransaction;
+import com.sopra.challenge.business.port.input.IAccountService;
+import com.sopra.challenge.business.port.input.ITransactionService;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
-import com.sopra.challenge.infrastructure.repository.TransactionRepository;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CreateTransactionService implements ICreateTransaction {
+public class TransactionService implements ITransactionService {
 
-  @Autowired
-  private final AccountService accountService;
+  private final IAccountService accountService;
 
-  @Autowired
   private final ITransactionRepository transactionRepository;
 
-  public CreateTransactionService(AccountService accountService,
-      TransactionRepository transactionRepository) {
+  public TransactionService(IAccountService accountService, ITransactionRepository transactionRepository) {
     this.accountService = accountService;
     this.transactionRepository = transactionRepository;
   }

@@ -1,7 +1,7 @@
 package com.sopra.challenge.infrastructure.mapper;
 
 import com.sopra.challenge.business.domain.Transaction;
-import com.sopra.challenge.infrastructure.repository.DTO.TransactionEntity;
+import com.sopra.challenge.infrastructure.repository.dto.TransactionEntity;
 
 public class TransactionDomainInfrastructureMapper {
 

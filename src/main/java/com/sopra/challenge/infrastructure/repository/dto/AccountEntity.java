@@ -1,4 +1,4 @@
-package com.sopra.challenge.infrastructure.repository.DTO;
+package com.sopra.challenge.infrastructure.repository.dto;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

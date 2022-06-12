@@ -1,28 +1,29 @@
 package com.sopra.challenge.business.service;
 
 import com.sopra.challenge.business.domain.Account;
-import com.sopra.challenge.infrastructure.repository.AccountRepository;
+import com.sopra.challenge.business.port.input.IAccountService;
+import com.sopra.challenge.business.port.output.IAccountRepository;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AccountService {
+public class AccountService implements IAccountService {
 
-  AccountRepository accountRepository;
+  IAccountRepository accountRepository;
 
-  public AccountService(AccountRepository accountRepository) {
+  public AccountService(IAccountRepository accountRepository) {
     this.accountRepository = accountRepository;
   }
 
   public Double retrieveCredit(String iban) {
-    Optional<Account> accountOptional = accountRepository.find(iban);
+    Optional<Account> accountOptional = accountRepository.search(iban);
     if (accountOptional.isEmpty()) {
       Account newAccount = Account
           .builder()
           .amount(0.0)
           .iban(iban)
           .build();
-      accountRepository.save(newAccount);
+      accountRepository.create(newAccount);
       return newAccount.getAmount();
     }
     return accountOptional.get().getAmount();

@@ -1,5 +1,6 @@
 package com.sopra.challenge.ut.business.domain;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -11,7 +12,30 @@ import org.junit.jupiter.api.Test;
 class TransactionTest {
 
   @Test
-  void transactionNoIbanFailTest() {
+  void transactionOkTest_UT() {
+    //Given
+    String reference = "12345A";
+    String iban = "ES9820385778983000760236";
+    Double amount = 100.0;
+    Double fee = 3.50;
+    String description = "Salary income";
+    //When
+    Transaction transaction = Transaction
+        .builder()
+        .reference(reference)
+        .iban(iban)
+        .dateTime(LocalDateTime.now().minusDays(1))
+        .amount(amount)
+        .fee(fee)
+        .description(description)
+        .build();
+    //Then
+    assertEquals(iban, transaction.getIban());
+    assertEquals(amount, transaction.getAmount());
+  }
+
+  @Test
+  void transactionNoIbanFails_UT() {
     //Given
     String reference = "12345A";
     String iban = null;
@@ -34,7 +58,7 @@ class TransactionTest {
   }
 
   @Test
-  void transactionNoAmountFailTest() {
+  void transactionNoAmountFails_UT() {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -57,7 +81,7 @@ class TransactionTest {
   }
 
   @Test
-  void transactionBlankIbanFailTest() {
+  void transactionBlankIbanFails_UT() {
     //Given
     String reference = "12345A";
     String iban = "  ";
@@ -80,7 +104,7 @@ class TransactionTest {
   }
 
   @Test
-  void transaction0AmountFailTest() {
+  void transaction0AmountFails_UT() {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";

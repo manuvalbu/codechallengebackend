@@ -10,9 +10,9 @@ import static org.mockito.Mockito.verify;
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.exception.CreditException;
 import com.sopra.challenge.business.exception.TransactionParameterException;
-import com.sopra.challenge.business.service.AccountService;
-import com.sopra.challenge.business.service.CreateTransactionService;
-import com.sopra.challenge.infrastructure.repository.TransactionRepository;
+import com.sopra.challenge.business.port.input.IAccountService;
+import com.sopra.challenge.business.port.output.ITransactionRepository;
+import com.sopra.challenge.business.service.TransactionService;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,17 +21,17 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-class TransactionCreatedTest {
+class TransactionServiceTest {
 
   @Mock
-  AccountService accountServiceMock;
+  IAccountService accountServiceMock;
   @Mock
-  TransactionRepository transactionRepositoryMock;
+  ITransactionRepository transactionRepositoryMock;
   @InjectMocks
-  CreateTransactionService createTransactionService;
+  TransactionService transactionService;
 
   @Test
-  void positiveTransactionOkTest() throws CreditException, TransactionParameterException {
+  void positiveTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -49,20 +49,20 @@ class TransactionCreatedTest {
         .build();
     given(accountServiceMock.retrieveCredit(iban)).willReturn(0.0);
     //When
-    Double credit = createTransactionService.createTransaction(transaction);
+    Double credit = transactionService.createTransaction(transaction);
     //Then
     verify(transactionRepositoryMock, times(1)).create(transaction);
     assertEquals(amount - fee, credit);
   }
 
   @Test
-  void negativeTransactionFailTest() throws TransactionParameterException {
+  void negativeTransactionFails_UT() throws TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
     Double amount = -100.0;
     Double fee = 3.50;
-    Double creditDischarged = (amount - fee) * -1;
+    double creditDischarged = (amount - fee) * -1;
     String description = "Restaurant payment";
     Transaction transaction = Transaction
         .builder()
@@ -77,11 +77,11 @@ class TransactionCreatedTest {
     //Then When
     verify(transactionRepositoryMock, times(0)).create(transaction);
     assertThrows(CreditException.class,
-        () -> createTransactionService.createTransaction(transaction));
+        () -> transactionService.createTransaction(transaction));
   }
 
   @Test
-  void negativeTransactionOkTest() throws CreditException, TransactionParameterException {
+  void negativeTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -100,7 +100,7 @@ class TransactionCreatedTest {
         .build();
     given(accountServiceMock.retrieveCredit(iban)).willReturn(creditDischarged);
     //When
-    Double credit = createTransactionService.createTransaction(transaction);
+    Double credit = transactionService.createTransaction(transaction);
     //Then
     verify(transactionRepositoryMock, times(1)).create(transaction);
     assertTrue(credit >= 0);
