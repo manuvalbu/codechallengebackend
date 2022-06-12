@@ -3,17 +3,19 @@ package com.sopra.challenge.infrastructure.repository;
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
 import com.sopra.challenge.infrastructure.mapper.TransactionDomainInfrastructureMapper;
-import com.sopra.challenge.infrastructure.repository.DTO.TransactionEntity;
+import com.sopra.challenge.infrastructure.repository.dto.TransactionEntity;
 import com.sopra.challenge.infrastructure.repository.persistence.TransactionJpaRepository;
 import java.util.Optional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class TransactionRepository implements ITransactionRepository {
 
-  @Autowired
   TransactionJpaRepository transactionJpaRepository;
+
+  public TransactionRepository(TransactionJpaRepository transactionJpaRepository) {
+    this.transactionJpaRepository = transactionJpaRepository;
+  }
 
   @Override
   public void create(Transaction transaction) {

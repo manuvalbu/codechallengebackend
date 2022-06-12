@@ -20,9 +20,12 @@ class HU1Test {
   int randomServerPort;
   RestTemplate restTemplate = new RestTemplate();
 
+  String path = "/challenge/transaction";
+
   @Test
-  void HU1TransactionCreatedOKTest() throws JSONException {
-    final String uri = "http://localhost:" + randomServerPort + "/transaction";
+  void HU1TransactionCreatedOK_E2ET() throws JSONException {
+    //Given
+    final String uri = "http://localhost:" + randomServerPort + path;
 
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
@@ -37,8 +40,10 @@ class HU1Test {
 
     HttpEntity<String> request = new HttpEntity<String>(personJsonObject.toString(), headers);
 
+    //When
     ResponseEntity<Void> responseEntity = restTemplate.postForEntity(uri, request, Void.class);
 
+    //Then
     assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
 
   }

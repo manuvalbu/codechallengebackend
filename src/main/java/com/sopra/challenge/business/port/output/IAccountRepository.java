@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface IAccountRepository {
 
-  Optional<Account> find(String iban);
+  Optional<Account> search(String iban);
 
-  void save(Account account);
+  void create(Account account);
 }

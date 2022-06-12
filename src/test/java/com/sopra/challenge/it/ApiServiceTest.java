@@ -12,8 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.sopra.challenge.business.domain.Transaction;
-import com.sopra.challenge.infrastructure.repository.AccountRepository;
-import com.sopra.challenge.infrastructure.repository.TransactionRepository;
+import com.sopra.challenge.business.port.output.IAccountRepository;
+import com.sopra.challenge.business.port.output.ITransactionRepository;
 import java.util.Optional;
 import org.hamcrest.Matchers;
 import org.json.JSONObject;
@@ -33,14 +33,16 @@ class ApiServiceTest {
   private MockMvc mockMvc;
 
   @MockBean
-  private TransactionRepository transactionRepositoryMock;
+  private ITransactionRepository transactionRepositoryMock;
   @MockBean
-  private AccountRepository accountRepositoryMock;
+  private IAccountRepository accountRepositoryMock;
+
+  String path = "/challenge/transaction";
 
   @Test
-  void createTransactionOk() throws Exception {
+  void createTransactionOk_IT() throws Exception {
     //Given
-    given(accountRepositoryMock.find(any(String.class))).willReturn(Optional.empty());
+    given(accountRepositoryMock.search(any(String.class))).willReturn(Optional.empty());
 
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
@@ -53,22 +55,21 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post("/transaction")
+            post(path)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
         //Then
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(APPLICATION_JSON));
+        .andExpect(status().isOk());
     //Then
-    verify(accountRepositoryMock, times(1)).find(any(String.class));
+    verify(accountRepositoryMock, times(1)).search(any(String.class));
     verify(transactionRepositoryMock, times(1)).create(any(Transaction.class));
   }
 
   @Test
-  void createTransactionFailNegativeCredit() throws Exception {
+  void createTransactionFailsNegativeCredit_IT() throws Exception {
     //Given
-    given(accountRepositoryMock.find(any(String.class))).willReturn(Optional.empty());
+    given(accountRepositoryMock.search(any(String.class))).willReturn(Optional.empty());
 
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
@@ -81,7 +82,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post("/transaction")
+            post(path)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -90,13 +91,13 @@ class ApiServiceTest {
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(content().string(Matchers.containsString("credit")));
     //Then
-    verify(accountRepositoryMock, times(1)).find(any(String.class));
+    verify(accountRepositoryMock, times(1)).search(any(String.class));
     verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 
 
   @Test
-  void createTransactionParameterFailNoIban() throws Exception {
+  void createTransactionParameterFailsNoIban_IT() throws Exception {
     //Given
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
@@ -108,7 +109,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post("/transaction")
+            post(path)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -117,12 +118,12 @@ class ApiServiceTest {
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(content().string(Matchers.containsString("IBAN")));
     //Then
-    verify(accountRepositoryMock, times(0)).find(any(String.class));
+    verify(accountRepositoryMock, times(0)).search(any(String.class));
     verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 
   @Test
-  void createTransactionParameterFail0Amount() throws Exception {
+  void createTransactionParameterFails0Amount_IT() throws Exception {
     //Given
     JSONObject personJsonObject = new JSONObject();
     personJsonObject.put("reference", "12345A");
@@ -135,7 +136,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post("/transaction")
+            post(path)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -144,7 +145,7 @@ class ApiServiceTest {
         .andExpect(content().contentType(APPLICATION_JSON))
         .andExpect(content().string(Matchers.containsString("amount")));
     //Then
-    verify(accountRepositoryMock, times(0)).find(any(String.class));
+    verify(accountRepositoryMock, times(0)).search(any(String.class));
     verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
   }
 }

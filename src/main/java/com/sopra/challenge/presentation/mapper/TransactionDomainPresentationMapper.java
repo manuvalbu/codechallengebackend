@@ -1,7 +1,7 @@
 package com.sopra.challenge.presentation.mapper;
 
 import com.sopra.challenge.business.domain.Transaction;
-import com.sopra.challenge.presentation.DTO.TransactionDTO;
+import com.sopra.challenge.presentation.dto.TransactionDTO;
 
 public class TransactionDomainPresentationMapper {
 

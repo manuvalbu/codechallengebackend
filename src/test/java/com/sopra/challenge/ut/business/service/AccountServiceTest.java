@@ -7,8 +7,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.sopra.challenge.business.domain.Account;
+import com.sopra.challenge.business.port.output.IAccountRepository;
 import com.sopra.challenge.business.service.AccountService;
-import com.sopra.challenge.infrastructure.repository.AccountRepository;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,37 +20,37 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class AccountServiceTest {
 
   @Mock
-  AccountRepository accountRepository;
+  IAccountRepository accountRepository;
 
   @InjectMocks
   AccountService accountService;
 
   @Test
-  void retrieveCreditOkTest() {
-    //given
+  void retrieveCreditOk_UT() {
+    //Given
     String iban = "ES9820385778983000760236";
     Account account = Account
         .builder()
         .iban(iban)
         .amount(0.0)
         .build();
-    given(accountRepository.find(iban)).willReturn(Optional.of(account));
+    given(accountRepository.search(iban)).willReturn(Optional.of(account));
     //when
     accountService.retrieveCredit(iban);
-    //then
-    verify(accountRepository, times(1)).find(iban);
+    //Then
+    verify(accountRepository, times(1)).search(iban);
   }
 
   @Test
-  void retrieveCreditNoAccountTest() {
-    //given
+  void retrieveCreditNoAccount_UT() {
+    //Given
     String iban = "ES9820385778983000760236";
-    given(accountRepository.find(iban)).willReturn(Optional.empty());
-    //when
+    given(accountRepository.search(iban)).willReturn(Optional.empty());
+    //When
     Double amount = accountService.retrieveCredit(iban);
-    //then
-    verify(accountRepository, times(1)).find(iban);
-    verify(accountRepository, times(1)).save(any(Account.class));
+    //Then
+    verify(accountRepository, times(1)).search(iban);
+    verify(accountRepository, times(1)).create(any(Account.class));
     assertEquals(0.0, amount);
   }
 }
