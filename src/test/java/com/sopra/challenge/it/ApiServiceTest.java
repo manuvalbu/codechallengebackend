@@ -23,6 +23,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -37,7 +38,9 @@ class ApiServiceTest {
   @MockBean
   private IAccountRepository accountRepositoryMock;
 
-  String path = "/challenge/transaction";
+  String pathCreate = "/challenge/transaction";
+
+  String pathSearch = "/challenge/transactions";
 
   @Test
   void createTransactionOk_IT() throws Exception {
@@ -55,7 +58,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post(path)
+            post(pathCreate)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -82,7 +85,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post(path)
+            post(pathCreate)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -109,7 +112,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post(path)
+            post(pathCreate)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -136,7 +139,7 @@ class ApiServiceTest {
     //When
     this.mockMvc
         .perform(
-            post(path)
+            post(pathCreate)
                 .contentType(APPLICATION_JSON)
                 .content(personJsonObject.toString()))
         .andDo(print())
@@ -147,5 +150,14 @@ class ApiServiceTest {
     //Then
     verify(accountRepositoryMock, times(0)).search(any(String.class));
     verify(transactionRepositoryMock, times(0)).create(any(Transaction.class));
+  }
+
+  @Test
+  void findTransactionsOk_IT() throws Exception {
+    //When
+    this.mockMvc.perform(MockMvcRequestBuilders.
+            get(pathSearch))
+        .andDo(print())
+        .andExpect(status().isOk());
   }
 }
