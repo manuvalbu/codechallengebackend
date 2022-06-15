@@ -2,6 +2,7 @@ package com.sopra.challenge.business.domain;
 
 import com.sopra.challenge.business.exception.TransactionParameterException;
 import java.time.LocalDateTime;
+import java.util.UUID;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -20,11 +21,27 @@ public class Transaction {
 
   public static class TransactionBuilder {
 
+    public TransactionBuilder reference(String reference) {
+      if (reference == null || reference.isBlank()) {
+        reference = UUID.randomUUID().toString();
+      }
+      this.reference = reference;
+      return this;
+    }
+
     public TransactionBuilder iban(String iban) throws TransactionParameterException {
       if (iban == null || iban.isBlank()) {
         throw new TransactionParameterException("no valid IBAN");
       }
       this.iban = iban;
+      return this;
+    }
+
+    public TransactionBuilder dateTime(LocalDateTime dateTime) {
+      if (dateTime == null) {
+        dateTime = LocalDateTime.now();
+      }
+      this.dateTime = dateTime;
       return this;
     }
 
@@ -36,6 +53,13 @@ public class Transaction {
       return this;
     }
 
+    public TransactionBuilder fee(Double fee) {
+      if (fee == null) {
+        fee = 0.0;
+      }
+      this.fee = fee;
+      return this;
+    }
   }
 
 }
