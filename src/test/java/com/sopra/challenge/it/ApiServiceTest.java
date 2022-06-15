@@ -44,20 +44,20 @@ class ApiServiceTest {
     //Given
     given(accountRepositoryMock.search(any(String.class))).willReturn(Optional.empty());
 
-    JSONObject personJsonObject = new JSONObject();
-    personJsonObject.put("reference", "12345A");
-    personJsonObject.put("iban", "ES9820385778983000760236");
-    personJsonObject.put("date", "2019-07-16T16:55:42.000Z");
-    personJsonObject.put("amount", 193.38);
-    personJsonObject.put("fee", 3.18);
-    personJsonObject.put("description", "Restaurant payment");
+    JSONObject transactionJsonObject = new JSONObject();
+    transactionJsonObject.put("reference", "12345A");
+    transactionJsonObject.put("iban", "ES9820385778983000760236");
+    transactionJsonObject.put("date", "2019-07-16T16:55:42.000Z");
+    transactionJsonObject.put("amount", 193.38);
+    transactionJsonObject.put("fee", 3.18);
+    transactionJsonObject.put("description", "Restaurant payment");
 
     //When
     this.mockMvc
         .perform(
             post(path)
                 .contentType(APPLICATION_JSON)
-                .content(personJsonObject.toString()))
+                .content(transactionJsonObject.toString()))
         .andDo(print())
         //Then
         .andExpect(status().isOk());
@@ -71,20 +71,20 @@ class ApiServiceTest {
     //Given
     given(accountRepositoryMock.search(any(String.class))).willReturn(Optional.empty());
 
-    JSONObject personJsonObject = new JSONObject();
-    personJsonObject.put("reference", "12345A");
-    personJsonObject.put("iban", "ES9820385778983000760236");
-    personJsonObject.put("date", "2019-07-16T16:55:42.000Z");
-    personJsonObject.put("amount", -193.38);
-    personJsonObject.put("fee", 3.18);
-    personJsonObject.put("description", "Restaurant payment");
+    JSONObject transactionJsonObject = new JSONObject();
+    transactionJsonObject.put("reference", "12345A");
+    transactionJsonObject.put("iban", "ES9820385778983000760236");
+    transactionJsonObject.put("date", "2019-07-16T16:55:42.000Z");
+    transactionJsonObject.put("amount", -193.38);
+    transactionJsonObject.put("fee", 3.18);
+    transactionJsonObject.put("description", "Restaurant payment");
 
     //When
     this.mockMvc
         .perform(
             post(path)
                 .contentType(APPLICATION_JSON)
-                .content(personJsonObject.toString()))
+                .content(transactionJsonObject.toString()))
         .andDo(print())
         //Then
         .andExpect(status().isFailedDependency())
@@ -99,19 +99,19 @@ class ApiServiceTest {
   @Test
   void createTransactionParameterFailsNoIban_IT() throws Exception {
     //Given
-    JSONObject personJsonObject = new JSONObject();
-    personJsonObject.put("reference", "12345A");
-    personJsonObject.put("date", "2019-07-16T16:55:42.000Z");
-    personJsonObject.put("amount", 100.0);
-    personJsonObject.put("fee", 3.18);
-    personJsonObject.put("description", "Restaurant payment");
+    JSONObject transactionJsonObject = new JSONObject();
+    transactionJsonObject.put("reference", "12345A");
+    transactionJsonObject.put("date", "2019-07-16T16:55:42.000Z");
+    transactionJsonObject.put("amount", 100.0);
+    transactionJsonObject.put("fee", 3.18);
+    transactionJsonObject.put("description", "Restaurant payment");
 
     //When
     this.mockMvc
         .perform(
             post(path)
                 .contentType(APPLICATION_JSON)
-                .content(personJsonObject.toString()))
+                .content(transactionJsonObject.toString()))
         .andDo(print())
         //Then
         .andExpect(status().isBadRequest())
@@ -125,20 +125,20 @@ class ApiServiceTest {
   @Test
   void createTransactionParameterFails0Amount_IT() throws Exception {
     //Given
-    JSONObject personJsonObject = new JSONObject();
-    personJsonObject.put("reference", "12345A");
-    personJsonObject.put("iban", "ES9820385778983000760236");
-    personJsonObject.put("date", "2019-07-16T16:55:42.000Z");
-    personJsonObject.put("amount", 0);
-    personJsonObject.put("fee", 3.18);
-    personJsonObject.put("description", "Restaurant payment");
+    JSONObject transactionJsonObject = new JSONObject();
+    transactionJsonObject.put("reference", "12345A");
+    transactionJsonObject.put("iban", "ES9820385778983000760236");
+    transactionJsonObject.put("date", "2019-07-16T16:55:42.000Z");
+    transactionJsonObject.put("amount", 0);
+    transactionJsonObject.put("fee", 3.18);
+    transactionJsonObject.put("description", "Restaurant payment");
 
     //When
     this.mockMvc
         .perform(
             post(path)
                 .contentType(APPLICATION_JSON)
-                .content(personJsonObject.toString()))
+                .content(transactionJsonObject.toString()))
         .andDo(print())
         //Then
         .andExpect(status().isBadRequest())
