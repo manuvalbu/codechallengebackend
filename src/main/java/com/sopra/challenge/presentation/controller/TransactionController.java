@@ -7,13 +7,13 @@ import com.sopra.challenge.presentation.mapper.TransactionDomainPresentationMapp
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import javax.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -39,8 +39,8 @@ public class TransactionController {
 
   @GetMapping("/transactions")
   public ResponseEntity<List<TransactionDTO>> searchTransactions(
-      @PathParam("iban") Optional<String> iban,
-      @PathParam("sort") Optional<String> sortDir) {
+      @RequestParam("iban") Optional<String> iban,
+      @RequestParam("sort") Optional<String> sortDir) {
     log.info("search Transactions");
     List<Transaction> transactions = transactionService.searchTransactions(iban, sortDir);
     List<TransactionDTO> transactionDTOs = transactions

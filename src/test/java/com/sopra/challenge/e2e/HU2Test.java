@@ -1,11 +1,14 @@
 package com.sopra.challenge.e2e;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sopra.challenge.infrastructure.repository.dto.TransactionEntity;
 import com.sopra.challenge.infrastructure.repository.persistence.AccountJpaRepository;
 import com.sopra.challenge.infrastructure.repository.persistence.TransactionJpaRepository;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -78,5 +82,23 @@ class HU2Test {
     ResponseEntity<List> responseEntity = restTemplate.getForEntity(uri, List.class);
     //Then
     assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+    assertEquals(5, Objects.requireNonNull(responseEntity.getBody()).size());
+  }
+
+  @Test
+  void HU2FindAllTransactionsIbanSortedDesc_E2ET() {
+    //Given
+    String ibanAndSortParameters = "?iban=" + iban1 + "&sort=" + Sort.Direction.DESC.name();
+    final String uri = "http://localhost:" + randomServerPort + path + ibanAndSortParameters;
+    //When
+    ResponseEntity<List> responseEntity = restTemplate.getForEntity(uri, List.class);
+    //Then
+    assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
+    List<LinkedHashMap> transactions = responseEntity.getBody();
+    assertEquals(2, transactions.size());
+    assertEquals(iban1, transactions.get(0).get("iban"));
+    assertEquals(iban1, transactions.get(1).get("iban"));
+    assertTrue(Double.parseDouble(transactions.get(0).get("amount").toString())
+        >= Double.parseDouble(transactions.get(1).get("amount").toString()));
   }
 }
