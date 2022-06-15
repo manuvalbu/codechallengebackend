@@ -14,6 +14,8 @@ import com.sopra.challenge.business.port.input.IAccountService;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
 import com.sopra.challenge.business.service.TransactionService;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +33,7 @@ class TransactionServiceTest {
   TransactionService transactionService;
 
   @Test
-  void positiveTransactionOk_UT() throws CreditException, TransactionParameterException {
+  void createPositiveTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -56,7 +58,7 @@ class TransactionServiceTest {
   }
 
   @Test
-  void negativeTransactionFails_UT() throws TransactionParameterException {
+  void createNegativeTransactionFails_UT() throws TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -81,7 +83,7 @@ class TransactionServiceTest {
   }
 
   @Test
-  void negativeTransactionOk_UT() throws CreditException, TransactionParameterException {
+  void createNegativeTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
@@ -104,5 +106,14 @@ class TransactionServiceTest {
     //Then
     verify(transactionRepositoryMock, times(1)).create(transaction);
     assertTrue(credit >= 0);
+  }
+
+  @Test
+  void searchTransactionsOk_UT() {
+    //When
+    List<Transaction> transactions = transactionService.searchTransactions(Optional.empty(),
+        Optional.empty());
+    //Then
+    verify(transactionRepositoryMock, times(1)).searchAll(Optional.empty(), Optional.empty());
   }
 }

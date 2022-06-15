@@ -5,6 +5,7 @@ import com.sopra.challenge.business.exception.CreditException;
 import com.sopra.challenge.business.port.input.IAccountService;
 import com.sopra.challenge.business.port.input.ITransactionService;
 import com.sopra.challenge.business.port.output.ITransactionRepository;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,8 @@ public class TransactionService implements ITransactionService {
 
   private final ITransactionRepository transactionRepository;
 
-  public TransactionService(IAccountService accountService, ITransactionRepository transactionRepository) {
+  public TransactionService(IAccountService accountService,
+      ITransactionRepository transactionRepository) {
     this.accountService = accountService;
     this.transactionRepository = transactionRepository;
   }
@@ -42,5 +44,10 @@ public class TransactionService implements ITransactionService {
   @Override
   public Optional<Transaction> searchTransaction(String reference) {
     return transactionRepository.search(reference);
+  }
+
+  @Override
+  public List<Transaction> searchTransactions(Optional<String> iban, Optional<String> sortDir) {
+    return transactionRepository.searchAll(iban, sortDir);
   }
 }
