@@ -2,11 +2,11 @@ package com.sopra.challenge.presentation.controller;
 
 import com.sopra.challenge.business.domain.Transaction;
 import com.sopra.challenge.business.port.input.ITransactionService;
-import com.sopra.challenge.infrastructure.repository.dto.TransactionEntity;
 import com.sopra.challenge.presentation.dto.TransactionDTO;
 import com.sopra.challenge.presentation.mapper.TransactionDomainPresentationMapper;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.websocket.server.PathParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -38,12 +38,17 @@ public class TransactionController {
   }
 
   @GetMapping("/transactions")
-  public ResponseEntity<List<TransactionEntity>> searchTransactions(@PathParam("iban") String iban,
-      @PathParam("sort") Integer sort) {
+  public ResponseEntity<List<TransactionDTO>> searchTransactions(
+      @PathParam("iban") Optional<String> iban,
+      @PathParam("sort") Optional<String> sortDir) {
     log.info("search Transactions");
-    //transactionService.search();
+    List<Transaction> transactions = transactionService.searchTransactions(iban, sortDir);
+    List<TransactionDTO> transactionDTOs = transactions
+        .stream()
+        .map(TransactionDomainPresentationMapper::toPresentationTransaction)
+        .collect(Collectors.toList());
     log.info("successfully searched transactions");
-    return ResponseEntity.ok(new ArrayList());
+    return ResponseEntity.ok(transactionDTOs);
   }
 }
 

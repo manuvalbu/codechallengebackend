@@ -74,13 +74,9 @@ class HU2Test {
   void HU2FindAllTransactions_E2ET() {
     //Given
     final String uri = "http://localhost:" + randomServerPort + path;
-
     //When
     ResponseEntity<List> responseEntity = restTemplate.getForEntity(uri, List.class);
-
     //Then
     assertTrue(responseEntity.getStatusCode().is2xxSuccessful());
-
   }
-
 }

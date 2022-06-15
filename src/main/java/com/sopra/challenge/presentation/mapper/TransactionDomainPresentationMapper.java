@@ -5,7 +5,8 @@ import com.sopra.challenge.presentation.dto.TransactionDTO;
 
 public class TransactionDomainPresentationMapper {
 
-  private TransactionDomainPresentationMapper() {}
+  private TransactionDomainPresentationMapper() {
+  }
 
   public static Transaction toDomainTransaction(TransactionDTO transactionDTO) {
     return Transaction
@@ -16,6 +17,18 @@ public class TransactionDomainPresentationMapper {
         .amount(transactionDTO.getAmount())
         .fee(transactionDTO.getFee())
         .description(transactionDTO.getDescription())
+        .build();
+  }
+
+  public static TransactionDTO toPresentationTransaction(Transaction transaction) {
+    return TransactionDTO
+        .builder()
+        .reference(transaction.getReference())
+        .iban(transaction.getIban())
+        .dateTime(transaction.getDateTime())
+        .amount(transaction.getAmount())
+        .fee(transaction.getFee())
+        .description(transaction.getDescription())
         .build();
   }
 }
