@@ -1,7 +1,9 @@
 package com.sopra.challenge.presentation.controller;
 
+import com.sopra.challenge.business.domain.Channel;
 import com.sopra.challenge.business.domain.Status;
 import com.sopra.challenge.business.domain.Transaction;
+import com.sopra.challenge.business.exception.TransactionParameterException;
 import com.sopra.challenge.business.port.input.ITransactionService;
 import com.sopra.challenge.presentation.dto.TransactionDTO;
 import com.sopra.challenge.presentation.dto.TransactionStatusDTO;
@@ -56,10 +58,36 @@ public class TransactionController {
   @PostMapping("/transaction/status")
   public ResponseEntity<TransactionStatusDTO> searchTransaction(
       @RequestBody TransactionStatusDTO transactionStatusDTOInput) {
+
+    if (transactionStatusDTOInput.getReference() == null || transactionStatusDTOInput.getReference()
+        .isBlank()) {
+      throw new TransactionParameterException("Missing Reference");
+    }
+    if (transactionStatusDTOInput.getChannel() == null || transactionStatusDTOInput.getChannel()
+        .isBlank()) {
+      throw new TransactionParameterException("Missing Channel");
+    }
+    try {
+      Channel.valueOf(transactionStatusDTOInput.getChannel());
+    } catch (Exception e) {
+      throw new TransactionParameterException(e.getMessage());
+    }
+
     log.info(
         "searching for Transaction status, Request body : " + transactionStatusDTOInput.toString());
     Optional<Transaction> transactionOptional = transactionService.searchTransaction(
         transactionStatusDTOInput.getReference());
+
+    if (transactionOptional.isEmpty()) {
+      log.info("Transaction not found, reference : " + transactionStatusDTOInput.getReference());
+      TransactionStatusDTO transactionStatusDTOOutput = TransactionStatusDTO
+          .builder()
+          .reference(transactionStatusDTOInput.getReference())
+          .status(Status.INVALID)
+          .build();
+      return ResponseEntity.ok(transactionStatusDTOOutput);
+    }
+
     Transaction transaction = transactionOptional.get();
     log.info(
         "successfully searched Transaction, reference : " + transaction.getReference());

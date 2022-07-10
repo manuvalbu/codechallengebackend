@@ -86,7 +86,7 @@ class HU3Test {
 
     JSONObject transactionSearchJsonObject = new JSONObject();
     transactionSearchJsonObject.put("reference", reference);
-    transactionSearchJsonObject.put("channel", Channel.CLIENT);
+    transactionSearchJsonObject.put("channel", Channel.CLIENT.name());
 
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);

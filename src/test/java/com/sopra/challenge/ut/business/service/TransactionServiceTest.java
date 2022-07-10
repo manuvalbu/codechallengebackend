@@ -32,11 +32,12 @@ class TransactionServiceTest {
   @InjectMocks
   TransactionService transactionService;
 
+  String reference = "12345A";
+  String iban = "ES9820385778983000760236";
+
   @Test
   void createPositiveTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
-    String reference = "12345A";
-    String iban = "ES9820385778983000760236";
     Double amount = 1000.0;
     Double fee = 3.50;
     String description = "Salary income";
@@ -60,8 +61,6 @@ class TransactionServiceTest {
   @Test
   void createNegativeTransactionFails_UT() throws TransactionParameterException {
     //Given
-    String reference = "12345A";
-    String iban = "ES9820385778983000760236";
     Double amount = -100.0;
     Double fee = 3.50;
     double creditDischarged = (amount - fee) * -1;
@@ -85,8 +84,6 @@ class TransactionServiceTest {
   @Test
   void createNegativeTransactionOk_UT() throws CreditException, TransactionParameterException {
     //Given
-    String reference = "12345A";
-    String iban = "ES9820385778983000760236";
     Double amount = -100.0;
     Double fee = 3.50;
     Double creditDischarged = (amount - fee) * -1;

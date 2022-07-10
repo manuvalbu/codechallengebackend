@@ -15,7 +15,7 @@ import lombok.ToString;
 public class TransactionStatusDTO {
 
   String reference;
-  Channel channel;
+  String channel;
   Status status;
   Double amount;
   Double fee;

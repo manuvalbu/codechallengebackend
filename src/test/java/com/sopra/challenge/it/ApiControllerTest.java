@@ -128,7 +128,7 @@ class ApiControllerTest {
         //Then
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(APPLICATION_JSON))
-        .andExpect(content().string(Matchers.containsString("IBAN")));
+        .andExpect(content().string(Matchers.containsStringIgnoringCase("iban")));
   }
 
   @Test
@@ -148,7 +148,7 @@ class ApiControllerTest {
         //Then
         .andExpect(status().isBadRequest())
         .andExpect(content().contentType(APPLICATION_JSON))
-        .andExpect(content().string(Matchers.containsString("amount")));
+        .andExpect(content().string(Matchers.containsStringIgnoringCase("amount")));
   }
 
   @Test
@@ -360,5 +360,69 @@ class ApiControllerTest {
             MockMvcResultMatchers.jsonPath("$.status").value(Status.PENDING.name()));
     //Then
     verify(transactionServiceMock, times(1)).searchTransaction(reference);
+  }
+
+  @Test
+  void searchTransactionNoReferenceFail_IT() throws Exception {
+    //Given
+    JSONObject transactionSearchJsonObject = new JSONObject();
+    transactionSearchJsonObject.put("channel", Channel.CLIENT);
+
+    //When
+    this.mockMvc
+        .perform(
+            post(pathInfo)
+                .contentType(APPLICATION_JSON)
+                .content(transactionSearchJsonObject.toString()))
+        .andDo(print())
+        //Then
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(content().string(Matchers.containsStringIgnoringCase("reference")));
+    //Then
+    verify(transactionServiceMock, times(0)).searchTransaction(any());
+  }
+
+  @Test
+  void searchTransactionNoChannelFail_IT() throws Exception {
+    //Given
+    JSONObject transactionSearchJsonObject = new JSONObject();
+    transactionSearchJsonObject.put("reference", reference);
+
+    //When
+    this.mockMvc
+        .perform(
+            post(pathInfo)
+                .contentType(APPLICATION_JSON)
+                .content(transactionSearchJsonObject.toString()))
+        .andDo(print())
+        //Then
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(content().string(Matchers.containsStringIgnoringCase("channel")));
+    //Then
+    verify(transactionServiceMock, times(0)).searchTransaction(any());
+  }
+
+  @Test
+  void searchTransactionIncorrectChannelFail_IT() throws Exception {
+    //Given
+    JSONObject transactionSearchJsonObject = new JSONObject();
+    transactionSearchJsonObject.put("reference", reference);
+    transactionSearchJsonObject.put("channel", "channel");
+
+    //When
+    this.mockMvc
+        .perform(
+            post(pathInfo)
+                .contentType(APPLICATION_JSON)
+                .content(transactionSearchJsonObject.toString()))
+        .andDo(print())
+        //Then
+        .andExpect(status().isBadRequest())
+        .andExpect(content().contentType(APPLICATION_JSON))
+        .andExpect(content().string(Matchers.containsStringIgnoringCase("channel")));
+    //Then
+    verify(transactionServiceMock, times(0)).searchTransaction(any());
   }
 }
