@@ -6,10 +6,12 @@ import com.sopra.challenge.business.domain.Channel;
 import com.sopra.challenge.business.domain.Status;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Builder
 @Getter
+@Setter
 @ToString
 @JsonInclude(Include.NON_NULL)
 public class TransactionStatusDTO {
