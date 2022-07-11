@@ -1,13 +1,10 @@
 package com.sopra.challenge.it;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sopra.challenge.business.domain.Transaction;
-import com.sopra.challenge.business.exception.CreditException;
-import com.sopra.challenge.business.exception.TransactionParameterException;
-import com.sopra.challenge.business.service.TransactionService;
+import com.sopra.challenge.infrastructure.repository.TransactionRepository;
 import com.sopra.challenge.infrastructure.repository.dto.TransactionEntity;
 import com.sopra.challenge.infrastructure.repository.persistence.AccountJpaRepository;
 import com.sopra.challenge.infrastructure.repository.persistence.TransactionJpaRepository;
@@ -23,10 +20,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class ServiceDatabaseTest {
+class RepositoryDatabaseTest {
 
   @Autowired
-  TransactionService transactionService;
+  TransactionRepository transactionRepository;
 
   @Autowired
   TransactionJpaRepository transactionJpaRepository;
@@ -82,7 +79,7 @@ class ServiceDatabaseTest {
   }
 
   @Test
-  void createTransactionOk_IT() {
+  void createAndSearchTransactionOk_IT() {
     //Given
     LocalDateTime date = LocalDateTime.now().minusDays(1);
     Double amount = 100.0;
@@ -98,67 +95,12 @@ class ServiceDatabaseTest {
         .description(description)
         .build();
     //When
-    transactionService.createTransaction(newTransaction);
-    Optional<Transaction> transactionOptional = transactionService.searchTransaction(
-        reference1);
+    transactionRepository.create(newTransaction);
+    Optional<Transaction> transactionOptional = transactionRepository.search(reference1);
     //Then
     assertTrue(transactionOptional.isPresent());
     Transaction retrievedTransaction = transactionOptional.get();
     assertEquals(newTransaction, retrievedTransaction);
-  }
-
-  @Test
-  void createTransactionCreditFails_IT() {
-    //Given
-    LocalDateTime date = LocalDateTime.now().minusDays(1);
-    Double amount = -1000.0;
-    Double fee = 3.50;
-    String description = "Big payment";
-    Transaction newTransaction = Transaction
-        .builder()
-        .reference(reference1)
-        .iban(iban1)
-        .dateTime(date)
-        .amount(amount)
-        .fee(fee)
-        .description(description)
-        .build();
-    //Then When
-    assertThrows(CreditException.class,
-        () -> transactionService.createTransaction(newTransaction));
-    //Then
-    Optional<Transaction> transactionOptional = transactionService.searchTransaction(
-        reference1);
-    assertTrue(transactionOptional.isEmpty());
-  }
-
-  @Test
-  void createTransaction0AmountFails_IT() {
-    //Given
-    LocalDateTime date = LocalDateTime.now().minusDays(1);
-    Double amount = 0.0;
-    Double fee = 3.50;
-    String description = "Nothing";
-    //Then When
-    TransactionParameterException transactionParameterException = assertThrows(
-        TransactionParameterException.class,
-        () -> {
-          Transaction newTransaction = Transaction
-              .builder()
-              .reference(reference1)
-              .iban(iban1)
-              .dateTime(date)
-              .amount(amount)
-              .fee(fee)
-              .description(description)
-              .build();
-          transactionService.createTransaction(newTransaction);
-        });
-    //Then
-    assertTrue(transactionParameterException.getMessage().contains("amount"));
-    Optional<Transaction> transactionOptional = transactionService.searchTransaction(
-        reference1);
-    assertTrue(transactionOptional.isEmpty());
   }
 
   @Test
@@ -199,7 +141,7 @@ class ServiceDatabaseTest {
     transactionJpaRepository.save(transaction2);
     transactionJpaRepository.save(transaction3);
     //When
-    List<Transaction> transactions = transactionService.searchTransactions(Optional.empty(),
+    List<Transaction> transactions = transactionRepository.searchAll(Optional.empty(),
         Optional.empty());
     //Then
     assertEquals(3, transactions.size());
@@ -246,7 +188,7 @@ class ServiceDatabaseTest {
     transactionJpaRepository.save(transaction2);
     transactionJpaRepository.save(transaction3);
     //When
-    List<Transaction> transactions = transactionService.searchTransactions(Optional.empty(),
+    List<Transaction> transactions = transactionRepository.searchAll(Optional.empty(),
         Optional.of("asc"));
     //Then
     assertEquals(3, transactions.size());
@@ -300,7 +242,7 @@ class ServiceDatabaseTest {
     transactionJpaRepository.save(transaction2);
     transactionJpaRepository.save(transaction3);
     //When
-    List<Transaction> transactions = transactionService.searchTransactions(Optional.of(iban1),
+    List<Transaction> transactions = transactionRepository.searchAll(Optional.of(iban1),
         Optional.empty());
     //Then
     assertEquals(2, transactions.size());
@@ -346,7 +288,7 @@ class ServiceDatabaseTest {
     transactionJpaRepository.save(transaction2);
     transactionJpaRepository.save(transaction3);
     //When
-    List<Transaction> transactions = transactionService.searchTransactions(Optional.of(iban1),
+    List<Transaction> transactions = transactionRepository.searchAll(Optional.of(iban1),
         Optional.of("asc"));
     //Then
     assertEquals(2, transactions.size());

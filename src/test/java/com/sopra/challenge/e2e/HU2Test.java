@@ -41,9 +41,17 @@ class HU2Test {
 
   @BeforeEach
   void setUp() {
-    reference = UUID.randomUUID().toString();
-    iban1 = UUID.randomUUID().toString();
-    iban2 = UUID.randomUUID().toString();
+    //get reference that don't exist in database
+    while (reference == null || transactionJpaRepository.findById(reference).isPresent()) {
+      reference = UUID.randomUUID().toString();
+    }
+    //get ibans that don't exist in database
+    while (iban1 == null || accountJpaRepository.findById(iban1).isPresent()) {
+      iban1 = UUID.randomUUID().toString();
+    }
+    while (iban2 == null || accountJpaRepository.findById(iban2).isPresent()) {
+      iban2 = UUID.randomUUID().toString();
+    }
     //create transactions in database
     for (int i = 1; i <= 5; i++) {
       TransactionEntity transaction = TransactionEntity

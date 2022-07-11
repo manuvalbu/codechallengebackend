@@ -40,7 +40,6 @@ class TransactionTest {
   void transactionNoIbanFails_UT() {
     //Given
     String reference = "12345A";
-    String iban = null;
     Double amount = 100.0;
     Double fee = 3.50;
     String description = "Salary income";
@@ -50,7 +49,6 @@ class TransactionTest {
         () -> Transaction
             .builder()
             .reference(reference)
-            .iban(iban)
             .dateTime(LocalDateTime.now().minusDays(1))
             .amount(amount)
             .fee(fee)
@@ -64,7 +62,6 @@ class TransactionTest {
     //Given
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
-    Double amount = null;
     Double fee = 3.50;
     String description = "Salary income";
     //Then When
@@ -75,7 +72,6 @@ class TransactionTest {
             .reference(reference)
             .iban(iban)
             .dateTime(LocalDateTime.now().minusDays(1))
-            .amount(amount)
             .fee(fee)
             .description(description)
             .build());
@@ -131,7 +127,6 @@ class TransactionTest {
   @Test
   void transactionNoReferenceOk_UT() {
     //Given
-    String reference = null;
     String iban = "ES9820385778983000760236";
     Double amount = 100.0;
     Double fee = 3.50;
@@ -139,7 +134,6 @@ class TransactionTest {
     //When
     Transaction transaction = Transaction
         .builder()
-        .reference(reference)
         .iban(iban)
         .dateTime(LocalDateTime.now().minusDays(1))
         .amount(amount)
@@ -157,7 +151,6 @@ class TransactionTest {
     String reference = "12345A";
     String iban = "ES9820385778983000760236";
     Double amount = 100.0;
-    Double fee = null;
     String description = "Salary income";
     //When
     Transaction transaction = Transaction
@@ -166,7 +159,6 @@ class TransactionTest {
         .iban(iban)
         .dateTime(LocalDateTime.now().minusDays(1))
         .amount(amount)
-        .fee(fee)
         .description(description)
         .build();
     //Then
@@ -187,7 +179,6 @@ class TransactionTest {
         .builder()
         .reference(reference)
         .iban(iban)
-        .dateTime(null)
         .amount(amount)
         .fee(fee)
         .description(description)

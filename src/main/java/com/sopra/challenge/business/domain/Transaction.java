@@ -19,48 +19,29 @@ public class Transaction {
   Double fee;
   String description;
 
-  public static class TransactionBuilder {
-
-    public TransactionBuilder reference(String reference) {
-      if (reference == null || reference.isBlank()) {
-        reference = UUID.randomUUID().toString();
-      }
-      this.reference = reference;
-      return this;
+  Transaction(String reference, String iban, LocalDateTime dateTime, Double amount, Double fee,
+      String description) {
+    if (reference == null || reference.isBlank()) {
+      reference = UUID.randomUUID().toString();
     }
-
-    public TransactionBuilder iban(String iban) throws TransactionParameterException {
-      if (iban == null || iban.isBlank()) {
-        throw new TransactionParameterException("no valid IBAN");
-      }
-      this.iban = iban;
-      return this;
+    this.reference = reference;
+    if (iban == null || iban.isBlank()) {
+      throw new TransactionParameterException("no valid IBAN");
     }
-
-    public TransactionBuilder dateTime(LocalDateTime dateTime) {
-      if (dateTime == null) {
-        dateTime = LocalDateTime.now();
-      }
-      this.dateTime = dateTime;
-      return this;
+    this.iban = iban;
+    if (dateTime == null) {
+      dateTime = LocalDateTime.now();
     }
-
-    public TransactionBuilder amount(Double amount) throws TransactionParameterException {
-      if (amount == null || amount == 0) {
-        throw new TransactionParameterException("no valid amount");
-      }
-      this.amount = amount;
-      return this;
+    this.dateTime = dateTime;
+    if (amount == null || amount == 0) {
+      throw new TransactionParameterException("no valid amount");
     }
-
-    public TransactionBuilder fee(Double fee) {
-      if (fee == null) {
-        fee = 0.0;
-      }
-      this.fee = fee;
-      return this;
+    this.amount = amount;
+    if (fee == null) {
+      fee = 0.0;
     }
+    this.fee = fee;
+    this.description = description;
   }
-
 }
 
